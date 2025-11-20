@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>충남대 공정가격 지도</title>
+<style>
+    :root {
+        --main: #3EB7A0;  
+        --bg: #F0F8F5;   
+        --card: #FFFFFF;
+        --text: #333;
+        --bar-bg: #e0e0e0;
+        --bar-fill: #3EB7A0;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Noto Sans KR", sans-serif;
+        background: linear-gradient(to bottom, #F0F8F5, #FFFFFF);
+    }
+
+    /* 상단 네비 */
+    .navbar {
+        background-color: var(--main);
+        padding: 12px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .nav-left {
+        display: flex;
+        gap: 12px;
+    }
+
+    .navbar button {
+        background: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        color: var(--main);
+        transition: 0.3s;
+        font-weight: 600;
+    }
+
+    .navbar button:hover {
+        background-color: #e9fffa;
+        transform: translateY(-2px);
+    }
+
+    .navbar .share-btn {
+        margin-right: 0;
+        font-weight: 600;
+    }
+
+    /* 카드 박스 */
+    .card {
+        background: var(--card);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+        margin: 40px auto;
+        max-width: 900px;
+        text-align: center;
+        transition: transform 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    h1, h2 {
+        color: var(--main);
+        margin-bottom: 15px;
+    }
+
+    p {
+        color: var(--text);
+        line-height: 1.75;
+        font-size: 16px;
+    }
+
+    .map-wrapper img {
+        width: 100%;
+        border-radius: 12px;
+        border: 2px solid var(--main);
+        margin-top: 18px;
+    }
+
+    .map-btns {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .map-btns button {
+        background: var(--main);
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .map-btns button:hover {
+        background: #2f8f7c;
+    }
+
+    #zoom-map {
+        display: none;
+        margin-top: 15px;
+        width: 100%;
+        border-radius: 12px;
+        border: 2px solid var(--main);
+    }
+
+    /* 동참하기 */
+    .join-section {
+        margin-top: 25px;
+    }
+
+    .join-btn {
+        background-color: var(--main);
+        color: white;
+        border: none;
+        padding: 14px 25px;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .join-btn:hover {
+        background-color: #2f8f7c;
+    }
+
+    .join-info {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .progress-bar {
+        width: 100%;
+        background-color: var(--bar-bg);
+        border-radius: 10px;
+        height: 20px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        width: 0%;
+        background-color: var(--bar-fill);
+        border-radius: 10px;
+        transition: width 0.5s ease;
+    }
+
+    /* 스토리 */
+    .story {
+        text-align: left;
+        margin-top: 20px;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+</style>
+</head>
+<body>
+
+<!-- 네비 -->
+<div class="navbar">
+    <div class="nav-left">
+        <button onclick="scrollToSection('map')">지도</button>
+        <button onclick="scrollToSection('story')">왜 만들었나요?</button>
+        <button onclick="scrollToSection('join')">동참하기</button>
+    </div>
+    <button class="share-btn" onclick="alert('공유 기능은 추후 구현 예정입니다.');">공유</button>
+</div>
+
+<!-- 지도 -->
+<div class="card" id="map">
+    <h2>충남대 주변 전체 지도</h2>
+    <p>정문·서문·쪽문 기준 도보 10분 내 헬스장 지도</p>
+    <div class="map-wrapper">
+        <img src="map_total.png" alt="전체 지도">
+    </div>
+
+    <div class="map-btns">
+        <button onclick="showZoom('map_front.png')">정문</button>
+        <button onclick="showZoom('map_back.png')">서문</button>
+        <button onclick="showZoom('map_side.png')">쪽문</button>
+    </div>
+
+    <img id="zoom-map" src="">
+</div>
+
+<!-- 스토리라인 -->
+<div class="card" id="story">
+    <h2>왜 만들었나요?</h2>
+    <div class="story">
+        <p>• 충남대 주변에서 가격 정보를 찾기 어려운 불편함에서 출발했습니다.</p>
+        <p>• 직접 조사해보니 가격 비공개가 구조적 문제라는 걸 확인했습니다.</p>
+        <p>• 학생들이 합리적인 선택을 할 수 있도록, <strong>가격 정보 투명화</strong>에 동참할 수 있는 플랫폼을 만들었습니다.</p>
+        <p>• 누구나 가격을 알고 비교할 수 있는 상권을 만드는 것이 목표입니다.</p>
+    </div>
+</div>
+
+<!-- 동참하기 -->
+<div class="card" id="join">
+    <h2>동참하기</h2>
+    <p>학생들이 합리적인 선택을 할 수 있도록, <strong>가격 정보 투명화</strong>에 동참합니다.</p>
+
+    <div class="join-section">
+        <button class="join-btn" id="join-btn" onclick="joinAction()">동참하기</button>
+        <p class="join-info" id="join-count">현재 0명 동참 / 목표 100명</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 지도 확대 이미지
+    function showZoom(imgSrc) {
+        const zoomImg = document.getElementById("zoom-map");
+        zoomImg.src = imgSrc;
+        zoomImg.style.display = "block";
+        zoomImg.scrollIntoView({ behavior: "smooth" });
+    }
+
+    // 동참자 수 증가 및 게이지바 (한 번만 가능)
+    let currentJoin = 0;
+    const goal = 100;
+    let joined = false;
+
+    function joinAction() {
+        if(joined) {
+            alert("이미 동참하셨습니다!");
+            return;
+        }
+        joined = true;
+        currentJoin++;
+        document.getElementById("join-count").innerText = `현재 ${currentJoin}명 동참 / 목표 ${goal}명`;
+        const percent = (currentJoin / goal) * 100;
+        document.getElementById("progress-fill").style.width = percent + "%";
+        document.getElementById("join-btn").disabled = true;
+        alert("동참해주셔서 감사합니다! 학생들이 합리적 선택을 할 수 있는 환경을 만드는 데 기여했습니다.");
+    }
+
+    // 네비 버튼 스크롤
+    function scrollToSection(id) {
+        document.getElementById(id).scrollIntoView({behavior: "smooth"});
+    }
+</script>
+
+</body>
+</html>
